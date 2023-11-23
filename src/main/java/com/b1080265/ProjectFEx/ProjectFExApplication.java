@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EntityScan(basePackages = "com.b1080265.ProjectFEx.entities")
 
 @EnableJpaRepositories(basePackages = "com.b1080265.ProjectFEx")
 public class ProjectFExApplication {

@@ -5,39 +5,55 @@ import com.b1080265.ProjectFEx.repositories.InvestorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InvestorService {
 
+    @Autowired
+    private InvestorRepo investorRepo;
 
-    private InvestorRepo investorRepository;
+    // Service method to save an investor
+    public Investor saveInvestor(Investor investor) {
+        return investorRepo.save(investor);
+    }
 
+    // Service method to retrieve all investors
     public List<Investor> getAllInvestors() {
-        return investorRepository.findAll();
+        return investorRepo.findAll();
     }
 
-    public Investor getInvestorById(Long id) {
-        return investorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Investor with id " + id + " not found"));
+    // Service method to retrieve an investor by ID
+    public Optional<Investor> getInvestorById(Long id) {
+        return investorRepo.findById(id);
     }
 
-    public Investor createInvestor(Investor investor) {
-        return investorRepository.save(investor);
-    }
-
+    // Service method to update an investor
     public Investor updateInvestor(Long id, Investor updatedInvestor) {
-        Investor existingInvestor = getInvestorById(id);
-        // Update the fields of existingInvestor with the values from updatedInvestor
-        existingInvestor.setName(updatedInvestor.getName());
-//        existingInvestor.setInvestmentAmount(updatedInvestor.getInvestmentAmount());
-//        existingInvestor.setInvestmentType(updatedInvestor.getInvestmentType());
-        // Update other fields as needed
-        return investorRepository.save(existingInvestor);
+        Optional<Investor> existingInvestorOptional = investorRepo.findById(id);
+
+        if (existingInvestorOptional.isPresent()) {
+            Investor existingInvestor = existingInvestorOptional.get();
+
+            // Update relevant fields
+            existingInvestor.setName(updatedInvestor.getName());
+            existingInvestor.setEmail(updatedInvestor.getEmail());
+            existingInvestor.setPassword(updatedInvestor.getPassword());
+            existingInvestor.setOrganization(updatedInvestor.getOrganization());
+            existingInvestor.setInvestmentInterests(updatedInvestor.getInvestmentInterests());
+
+            // Save and return the updated investor
+            return investorRepo.save(existingInvestor);
+        } else {
+            // Handle the case where the investor with the given ID is not found
+            // You may throw an exception or handle it based on your application's logic
+            return null;
+        }
     }
 
+    // Service method to delete an investor by ID
     public void deleteInvestor(Long id) {
-        investorRepository.deleteById(id);
+        investorRepo.deleteById(id);
     }
 }
