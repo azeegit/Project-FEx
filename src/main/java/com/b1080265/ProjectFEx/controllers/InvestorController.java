@@ -1,8 +1,12 @@
 package com.b1080265.ProjectFEx.controllers;
 
+import com.b1080265.ProjectFEx.JwtTokenProvider;
 import com.b1080265.ProjectFEx.entities.Investor;
+import com.b1080265.ProjectFEx.entities.LoginRequest;
+import com.b1080265.ProjectFEx.entities.LoginResponse;
 import com.b1080265.ProjectFEx.services.InvestorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,5 +53,25 @@ public class InvestorController {
     public ResponseEntity<Void> deleteInvestor(@PathVariable Long id) {
         investorService.deleteInvestor(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        // Validate credentials (you may need to implement this method in InvestorService)
+        Investor investor = investorService.validateCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+
+        if (investor != null) {
+            // Generate JWT token
+            String token = tokenProvider.generateToken(investor.getEmail());
+
+            // Create and return the LoginResponse
+            LoginResponse loginResponse = new LoginResponse(token);
+            return ResponseEntity.ok(loginResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

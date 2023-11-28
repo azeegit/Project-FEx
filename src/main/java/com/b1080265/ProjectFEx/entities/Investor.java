@@ -3,7 +3,7 @@ package com.b1080265.ProjectFEx.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "investors")
+@Table(name = "investors", schema = "public")
 public class Investor {
 
     @Id
@@ -11,6 +11,8 @@ public class Investor {
     private Long id;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
     private String password;
 
