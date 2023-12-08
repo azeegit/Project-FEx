@@ -4,6 +4,7 @@ import com.b1080265.ProjectFEx.entities.Investor;
 import com.b1080265.ProjectFEx.repositories.InvestorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +18,12 @@ public class InvestorService {
     private InvestorRepo investorRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     // Service method to save an investor
     public Investor saveInvestor(Investor investor) {
+        investor.setPassword(passwordEncoder.encode(investor.getPassword()));
+
         return investorRepository.save(investor);
     }
 

@@ -66,7 +66,7 @@ public class InvestorController {
         if (investor != null) {
             // Generate JWT token
             String token = tokenProvider.generateToken(investor.getEmail());
-
+            System.out.println("Generated Token: " + token);
             // Create and return the LoginResponse
             LoginResponse loginResponse = new LoginResponse(token);
             return ResponseEntity.ok(loginResponse);
