@@ -1,29 +1,26 @@
 package com.b1080265.ProjectFEx.entities;
 
+import com.b1080265.ProjectFEx.security.UserDetailsInterface;
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "investors", schema = "public")
-public class Investor {
+public class Investor implements UserDetailsInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
-    @Column(unique = true)
     private String email;
     private String password;
-
-    // Additional attributes specific to investors
     private String organization;
     private String investmentInterests;
 
-    // Constructors, getters, and setters
-
+    // Constructors
     public Investor() {
-        // Default constructor
     }
 
     public Investor(String name, String email, String password, String organization, String investmentInterests) {
@@ -34,66 +31,35 @@ public class Investor {
         this.investmentInterests = investmentInterests;
     }
 
-    // Getters and setters for all fields
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getOrganization() { return organization; }
+    public void setOrganization(String organization) { this.organization = organization; }
+    public String getInvestmentInterests() { return investmentInterests; }
+    public void setInvestmentInterests(String investmentInterests) { this.investmentInterests = investmentInterests; }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public String getInvestmentInterests() {
-        return investmentInterests;
-    }
-
-    public void setInvestmentInterests(String investmentInterests) {
-        this.investmentInterests = investmentInterests;
-    }
-
-    // Other methods and overrides as needed
-
+    // UserDetailsInterface methods
     @Override
-    public String toString() {
-        return "Investor{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", organization='" + organization + '\'' +
-                '}';
-    }
-}
+    public String getUsername() { return getEmail(); }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { return null; } // Implement as needed
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+    @Override
+    public boolean isEnabled() { return true; }
 
+
+
+    // Other methods
+}

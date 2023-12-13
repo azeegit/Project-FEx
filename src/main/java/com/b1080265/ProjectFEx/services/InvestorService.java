@@ -1,9 +1,11 @@
 package com.b1080265.ProjectFEx.services;
 
+import com.b1080265.ProjectFEx.security.NotFoundException;
 import com.b1080265.ProjectFEx.entities.Investor;
+import com.b1080265.ProjectFEx.entities.InvestorApplication;
+import com.b1080265.ProjectFEx.repositories.InvestorApplicationRepo;
 import com.b1080265.ProjectFEx.repositories.InvestorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class InvestorService {
 
     @Autowired
     private InvestorRepo investorRepository;
+
+    @Autowired
+    private InvestorApplicationRepo investorApplicationRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -81,5 +86,33 @@ public class InvestorService {
 
         return null;
     }
+
+    public InvestorApplication applyToCampaign(Long investorId, Long campaignId, InvestorApplication application) {
+        // Retrieve the investor
+        Investor investor = investorRepository.findById(investorId)
+                .orElseThrow(() -> new NotFoundException("Investor not found"));
+
+        // Set the relationship
+        application.setInvestor(investor);
+
+        // Implement logic to set other details provided by the investor
+        application.setInvestorRequest(application.getInvestorRequest());
+
+        application.setStatus("Pending"); // Set an initial status
+        // Add any other details you want to set
+
+        // Save the application
+        return investorApplicationRepository.save(application);
+    }
+    public List<InvestorApplication> getInvestorApplications(Long investorId) {
+        return investorApplicationRepository.findByInvestorId(investorId);
+    }
+
+    // Service method to retrieve details of a specific application submitted by an investor
+    public InvestorApplication getInvestorApplicationDetails(Long investorId, Long applicationId) {
+        return investorApplicationRepository.findByIdAndInvestorId(applicationId, investorId)
+                .orElseThrow(() -> new NotFoundException("Investor application not found for the given investor"));
+    }
+
 
 }

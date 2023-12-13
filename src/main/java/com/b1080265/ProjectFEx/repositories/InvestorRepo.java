@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface InvestorRepo extends JpaRepository<Investor, Long> {
 
     @Query("SELECT i FROM Investor i WHERE i.email = :email")
     Investor findByUsername(@Param("email") String email);
+
+    Optional<Investor> findByEmail(String email);
 }
 

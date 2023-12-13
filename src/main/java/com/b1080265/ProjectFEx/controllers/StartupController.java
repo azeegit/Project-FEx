@@ -1,9 +1,15 @@
 package com.b1080265.ProjectFEx.controllers;
 
+import com.b1080265.ProjectFEx.security.CustomUserDetailsService;
+import com.b1080265.ProjectFEx.security.JwtTokenProvider;
+import com.b1080265.ProjectFEx.entities.LoginRequest;
+import com.b1080265.ProjectFEx.entities.LoginResponse;
 import com.b1080265.ProjectFEx.entities.Startup;
 import com.b1080265.ProjectFEx.services.StartupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +21,9 @@ public class StartupController {
 
     @Autowired
     private StartupService startupService;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     // Endpoint to create a new startup
     @PostMapping
@@ -49,5 +58,23 @@ public class StartupController {
     public ResponseEntity<Void> deleteStartup(@PathVariable Long id) {
         startupService.deleteStartup(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Endpoint for startup login
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+    // Other endpoints...
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        Startup startup = startupService.validateCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+        if (startup != null) {
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(startup.getEmail());
+            String token = tokenProvider.generateToken(userDetails);
+            return ResponseEntity.ok(new LoginResponse(token));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

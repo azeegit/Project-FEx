@@ -1,13 +1,16 @@
 package com.b1080265.ProjectFEx.controllers;
 
-import com.b1080265.ProjectFEx.JwtTokenProvider;
+import com.b1080265.ProjectFEx.security.CustomUserDetailsService;
+import com.b1080265.ProjectFEx.security.JwtTokenProvider;
 import com.b1080265.ProjectFEx.entities.Investor;
+import com.b1080265.ProjectFEx.entities.InvestorApplication;
 import com.b1080265.ProjectFEx.entities.LoginRequest;
 import com.b1080265.ProjectFEx.entities.LoginResponse;
 import com.b1080265.ProjectFEx.services.InvestorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,12 @@ public class InvestorController {
 
     @Autowired
     private InvestorService investorService;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     // Endpoint to create a new investor
     @PostMapping
@@ -55,23 +64,44 @@ public class InvestorController {
         return ResponseEntity.noContent().build();
     }
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        // Validate credentials (you may need to implement this method in InvestorService)
         Investor investor = investorService.validateCredentials(loginRequest.getUsername(), loginRequest.getPassword());
-
         if (investor != null) {
-            // Generate JWT token
-            String token = tokenProvider.generateToken(investor.getEmail());
-            System.out.println("Generated Token: " + token);
-            // Create and return the LoginResponse
-            LoginResponse loginResponse = new LoginResponse(token);
-            return ResponseEntity.ok(loginResponse);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(investor.getEmail());
+            String token = tokenProvider.generateToken(userDetails);
+            return ResponseEntity.ok(new LoginResponse(token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    // Endpoint to submit an application for a campaign
+    @PostMapping("/{investorId}/campaigns/{campaignId}/apply")
+    public ResponseEntity<InvestorApplication> applyToCampaign(
+            @PathVariable Long investorId,
+            @PathVariable Long campaignId,
+            @RequestBody InvestorApplication application
+    ) {
+        InvestorApplication applied = investorService.applyToCampaign(investorId, campaignId, application);
+        return ResponseEntity.ok(applied);
+    }
+
+    // Endpoint to retrieve all applications submitted by an investor
+    @GetMapping("/{investorId}/applications")
+    public ResponseEntity<List<InvestorApplication>> getInvestorApplications(@PathVariable Long investorId) {
+        List<InvestorApplication> applications = investorService.getInvestorApplications(investorId);
+        return ResponseEntity.ok(applications);
+    }
+
+    // Endpoint to retrieve details of a specific application submitted by an investor
+    @GetMapping("/{investorId}/applications/{applicationId}")
+    public ResponseEntity<InvestorApplication> getInvestorApplicationDetails(
+            @PathVariable Long investorId,
+            @PathVariable Long applicationId
+    ) {
+        InvestorApplication application = investorService.getInvestorApplicationDetails(investorId, applicationId);
+        return ResponseEntity.ok(application);
     }
 }
