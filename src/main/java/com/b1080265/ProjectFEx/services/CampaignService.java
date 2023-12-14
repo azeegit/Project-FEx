@@ -55,4 +55,18 @@ public class CampaignService {
         return campaignRepository.findByIdAndStartupId(campaignId, startupId)
                 .orElseThrow(() -> new NotFoundException("Campaign not found for the given startup"));
     }
+
+    public Campaign updateCampaign(Long startupId, Long campaignId, Campaign campaignDetails) {
+        Campaign campaign = campaignRepository.findByIdAndStartupId(campaignId, startupId)
+                .orElseThrow(() -> new NotFoundException("Campaign not found for the given startup"));
+
+        // Update campaign details
+        // Example: campaign.setTitle(campaignDetails.getTitle());
+        // Save and return updated campaign
+        return campaignRepository.save(campaign);
+    }
+
+    public boolean isCampaignOwnedByStartup(Long campaignId, Long startupId) {
+        return campaignRepository.existsByIdAndStartupId(campaignId, startupId);
+    }
 }

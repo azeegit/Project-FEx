@@ -26,7 +26,18 @@ public class InvestorApplication {
     private int investorRequest;
     private int investorGivingAmount;
     private String investorDetailsToContact;
-    private String status;
+//    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
+
+    public ApplicationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ApplicationStatus status) {
+        this.status = status;
+    }
 
     private String businessPlan; // Path or link to the business plan
     private String pitchVideo;   // Path or link to the pitch video
@@ -53,7 +64,7 @@ public class InvestorApplication {
         this.investorRequest = investorRequest;
         this.investorGivingAmount = investorGivingAmount;
         this.investorDetailsToContact = investorDetailsToContact;
-        this.status = status;
+//        this.status = status;
         this.businessPlan = businessPlan;
         this.pitchVideo = pitchVideo;
         this.additionalComments = additionalComments;
@@ -109,13 +120,13 @@ public class InvestorApplication {
         this.investorDetailsToContact = investorDetailsToContact;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
 
     public String getBusinessPlan() {
         return businessPlan;

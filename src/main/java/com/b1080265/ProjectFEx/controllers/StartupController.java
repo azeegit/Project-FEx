@@ -1,10 +1,9 @@
 package com.b1080265.ProjectFEx.controllers;
 
+import com.b1080265.ProjectFEx.entities.*;
 import com.b1080265.ProjectFEx.security.CustomUserDetailsService;
 import com.b1080265.ProjectFEx.security.JwtTokenProvider;
-import com.b1080265.ProjectFEx.entities.LoginRequest;
-import com.b1080265.ProjectFEx.entities.LoginResponse;
-import com.b1080265.ProjectFEx.entities.Startup;
+import com.b1080265.ProjectFEx.services.InvestorService;
 import com.b1080265.ProjectFEx.services.StartupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +23,9 @@ public class StartupController {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private InvestorService investorService;
 
     // Endpoint to create a new startup
     @PostMapping
@@ -76,5 +78,39 @@ public class StartupController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @PutMapping("/{startupId}/applications/{applicationId}/accept")
+    public ResponseEntity<?> acceptApplication(
+            @PathVariable Long startupId,
+            @PathVariable Long applicationId) {
+        InvestorApplication application = investorService.getApplicationById(applicationId);
+        if (application == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!investorService.isCampaignOwnedByStartup(application.getCampaign().getId(), startupId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized to update this application");
+        }
+
+        InvestorApplication updatedApplication = investorService.updateApplicationStatus(applicationId, ApplicationStatus.ACCEPTED);
+        return ResponseEntity.ok(updatedApplication);
+    }
+
+    @PutMapping("/{startupId}/applications/{applicationId}/reject")
+    public ResponseEntity<?> rejectApplication(
+            @PathVariable Long startupId,
+            @PathVariable Long applicationId) {
+        InvestorApplication application = investorService.getApplicationById(applicationId);
+        if (application == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!investorService.isCampaignOwnedByStartup(application.getCampaign().getId(), startupId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized to update this application");
+        }
+
+        InvestorApplication updatedApplication = investorService.updateApplicationStatus(applicationId, ApplicationStatus.REJECTED);
+        return ResponseEntity.ok(updatedApplication);
     }
 }

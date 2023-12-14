@@ -1,10 +1,12 @@
 package com.b1080265.ProjectFEx.controllers;
 
 import com.b1080265.ProjectFEx.entities.Campaign;
+import com.b1080265.ProjectFEx.entities.InvestorApplication;
 import com.b1080265.ProjectFEx.services.CampaignService;
+import com.b1080265.ProjectFEx.services.InvestorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +18,9 @@ public class CampaignController {
 
     @Autowired
     private CampaignService campaignService;
+
+    @Autowired
+    private InvestorService investorService;
 
     // Endpoint to create a new campaign for a startup
     @PostMapping
@@ -42,5 +47,28 @@ public class CampaignController {
         return ResponseEntity.ok(campaign);
     }
 
+
+    // Endpoint to update a campaign
+    @PutMapping("/{campaignId}")
+    public ResponseEntity<Campaign> updateCampaign(@PathVariable Long startupId, @PathVariable Long campaignId, @Valid @RequestBody Campaign campaign) {
+        Campaign updatedCampaign = campaignService.updateCampaign(startupId, campaignId, campaign);
+        return updatedCampaign != null ? ResponseEntity.ok(updatedCampaign) : ResponseEntity.notFound().build();
+    }
+
+    // Endpoint to get all applications for a campaign
+    private ResponseEntity<?> createErrorResponse(String message, HttpStatus status) {
+        return ResponseEntity.status(status).body(message);
+    }
+
+    // ... existing methods ...
+
+    @GetMapping("/{campaignId}/applications")
+    public ResponseEntity<?> getCampaignApplications(@PathVariable Long startupId, @PathVariable Long campaignId) {
+        if (!campaignService.isCampaignOwnedByStartup(campaignId, startupId)) {
+            return createErrorResponse("Unauthorized to view applications for this campaign", HttpStatus.FORBIDDEN);
+        }
+        List<InvestorApplication> applications = investorService.getApplicationsForCampaign(campaignId);
+        return ResponseEntity.ok(applications);
+    }
     // Other endpoints for managing campaigns can be added here
 }

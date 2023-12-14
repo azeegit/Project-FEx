@@ -14,6 +14,7 @@ public interface InvestorRepo extends JpaRepository<Investor, Long> {
     @Query("SELECT i FROM Investor i WHERE i.email = :email")
     Investor findByUsername(@Param("email") String email);
 
+
     Optional<Investor> findByEmail(String email);
 }
 

@@ -11,4 +11,7 @@ public interface InvestorApplicationRepo extends JpaRepository<InvestorApplicati
     List<InvestorApplication> findByInvestorId(Long investorId);
 
     Optional<InvestorApplication> findByIdAndInvestorId(Long id, Long investorId);
+
+    Optional<InvestorApplication> findById(Long id);
+    List<InvestorApplication> findByCampaignId(Long campaignId);
 }

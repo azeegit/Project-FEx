@@ -1,11 +1,8 @@
 package com.b1080265.ProjectFEx.services;
 
-import com.b1080265.ProjectFEx.entities.Campaign;
-import com.b1080265.ProjectFEx.entities.Role;
+import com.b1080265.ProjectFEx.entities.*;
 import com.b1080265.ProjectFEx.repositories.CampaignRepo;
 import com.b1080265.ProjectFEx.security.NotFoundException;
-import com.b1080265.ProjectFEx.entities.Investor;
-import com.b1080265.ProjectFEx.entities.InvestorApplication;
 import com.b1080265.ProjectFEx.repositories.InvestorApplicationRepo;
 import com.b1080265.ProjectFEx.repositories.InvestorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,10 @@ public class InvestorService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public boolean isCampaignOwnedByStartup(Long campaignId, Long startupId) {
+        return campaignRepo.findByIdAndStartupId(campaignId, startupId).isPresent();
+    }
 
     // Service method to save an investor
     public Investor saveInvestor(Investor investor) {
@@ -110,7 +111,7 @@ public class InvestorService {
         // Implement logic to set other details provided by the investor
         // Here, setting investorRequest and status. Add other necessary fields as required
         application.setInvestorRequest(application.getInvestorRequest());
-        application.setStatus("Pending"); // Set an initial status
+//        application.setStatus("Pending"); // Set an initial status
 
         // Save the application
         return investorApplicationRepository.save(application);
@@ -127,5 +128,24 @@ public class InvestorService {
                 .orElseThrow(() -> new NotFoundException("Investor application not found for the given investor"));
     }
 
+    public InvestorApplication getApplicationById(Long applicationId) {
+        return investorApplicationRepository.findById(applicationId)
+                .orElse(null); // or throw an exception if you prefer
+    }
+    public InvestorApplication updateApplicationStatus(Long applicationId, ApplicationStatus newStatus) {
+        InvestorApplication application = investorApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NotFoundException("Application not found"));
+
+        application.setStatus(newStatus);
+        return investorApplicationRepository.save(application);
+    }
+
+
+
+    // Existing methods...
+
+    public List<InvestorApplication> getApplicationsForCampaign(Long campaignId) {
+        return investorApplicationRepository.findByCampaignId(campaignId);
+    }
 
 }
