@@ -3,6 +3,8 @@ name = "ProjectFexContract"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
+[lib]
+name = "ProjectFexContract"
+path = "src/lib.rs"
 [dependencies]
+rand = "0.8.4"  # Use the latest version of rand
