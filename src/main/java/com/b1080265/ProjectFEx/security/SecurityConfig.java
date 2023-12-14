@@ -43,13 +43,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/startups", "/investors").permitAll() // Allow signup
-                .antMatchers(HttpMethod.POST, "/startups/login", "/investors/login").permitAll() // Allow login
-                .antMatchers(HttpMethod.GET, "/", "/error", "/api/public").permitAll()
+                .antMatchers(HttpMethod.POST, "/startups", "/investors").permitAll()
+                .antMatchers(HttpMethod.POST, "/startups/signup", "/investors/signup").permitAll() // Signup endpoints
+                .antMatchers(HttpMethod.POST, "/startups/login", "/investors/login").permitAll() // Login endpoints
+                .antMatchers(HttpMethod.GET, "/", "/error", "/api/public").permitAll() // Public GET endpoints
+                .antMatchers("/admin/**").hasRole("ADMIN") // Admin-specific secure endpoints
+                .antMatchers("/startups/**", "/investors/**").authenticated() // All other startup and investor endpoints require authentication
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

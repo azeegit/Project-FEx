@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.b1080265.ProjectFEx.entities.Campaign;
 import com.b1080265.ProjectFEx.entities.Startup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.b1080265.ProjectFEx.repositories.StartupRepo;
 
@@ -16,6 +18,8 @@ import java.util.List;
 @Service
 public class CampaignService {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(CampaignService.class);
     @Autowired
     private StartupRepo startupRepository;
 
@@ -24,6 +28,7 @@ public class CampaignService {
 
     public Campaign createCampaign(Long startupId, Campaign campaign) {
         // Retrieve the startup
+        logger.info("Creating campaign for startupId: {}", startupId);
         Startup startup = startupRepository.findById(startupId)
                 .orElseThrow(() -> new NotFoundException("Startup not found"));
 

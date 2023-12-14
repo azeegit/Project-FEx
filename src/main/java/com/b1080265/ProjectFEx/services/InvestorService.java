@@ -1,5 +1,8 @@
 package com.b1080265.ProjectFEx.services;
 
+import com.b1080265.ProjectFEx.entities.Campaign;
+import com.b1080265.ProjectFEx.entities.Role;
+import com.b1080265.ProjectFEx.repositories.CampaignRepo;
 import com.b1080265.ProjectFEx.security.NotFoundException;
 import com.b1080265.ProjectFEx.entities.Investor;
 import com.b1080265.ProjectFEx.entities.InvestorApplication;
@@ -20,6 +23,9 @@ public class InvestorService {
     private InvestorRepo investorRepository;
 
     @Autowired
+    private CampaignRepo campaignRepo;
+
+    @Autowired
     private InvestorApplicationRepo investorApplicationRepository;
 
     @Autowired
@@ -27,6 +33,7 @@ public class InvestorService {
 
     // Service method to save an investor
     public Investor saveInvestor(Investor investor) {
+        investor.setRole(Role.ROLE_INVESTOR);
         investor.setPassword(passwordEncoder.encode(investor.getPassword()));
 
         return investorRepository.save(investor);
@@ -92,21 +99,27 @@ public class InvestorService {
         Investor investor = investorRepository.findById(investorId)
                 .orElseThrow(() -> new NotFoundException("Investor not found"));
 
-        // Set the relationship
+        // Retrieve the campaign
+        Campaign campaign = campaignRepo.findById(campaignId)
+                .orElseThrow(() -> new NotFoundException("Campaign not found"));
+
+        // Set the relationship with both investor and campaign
         application.setInvestor(investor);
+        application.setCampaign(campaign);
 
         // Implement logic to set other details provided by the investor
+        // Here, setting investorRequest and status. Add other necessary fields as required
         application.setInvestorRequest(application.getInvestorRequest());
-
         application.setStatus("Pending"); // Set an initial status
-        // Add any other details you want to set
 
         // Save the application
         return investorApplicationRepository.save(application);
     }
+
     public List<InvestorApplication> getInvestorApplications(Long investorId) {
         return investorApplicationRepository.findByInvestorId(investorId);
     }
+
 
     // Service method to retrieve details of a specific application submitted by an investor
     public InvestorApplication getInvestorApplicationDetails(Long investorId, Long applicationId) {

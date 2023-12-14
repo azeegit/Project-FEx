@@ -1,6 +1,7 @@
 package com.b1080265.ProjectFEx.entities;
 
 import com.b1080265.ProjectFEx.security.UserDetailsInterface;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -25,7 +26,19 @@ public class Startup implements UserDetailsInterface {
     private int equityOffered;
     private int valuation;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @OneToMany(mappedBy = "startup")
+    @JsonManagedReference
     private List<Campaign> campaigns;
 
     // Constructors

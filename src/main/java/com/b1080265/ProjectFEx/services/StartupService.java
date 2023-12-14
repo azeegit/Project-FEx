@@ -1,5 +1,6 @@
 package com.b1080265.ProjectFEx.services;
 
+import com.b1080265.ProjectFEx.entities.Role;
 import com.b1080265.ProjectFEx.entities.Startup;
 import com.b1080265.ProjectFEx.repositories.StartupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class StartupService {
 
     // Service method to save a startup
     public Startup saveStartup(Startup startup) {
+        startup.setRole(Role.ROLE_STARTUP);
         startup.setPassword(passwordEncoder.encode(startup.getPassword()));
         return startupRepository.save(startup);
     }

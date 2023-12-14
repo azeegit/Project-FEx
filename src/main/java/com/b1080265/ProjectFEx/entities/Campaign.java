@@ -1,6 +1,8 @@
 package com.b1080265.ProjectFEx.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -21,6 +23,7 @@ public class Campaign {
 
     @ManyToOne
     @JoinColumn(name = "startup_id", nullable = false)
+    @JsonBackReference
     private Startup startup;
 
     // Constructors

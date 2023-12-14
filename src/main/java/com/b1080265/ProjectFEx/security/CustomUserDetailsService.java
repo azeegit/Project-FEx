@@ -5,10 +5,15 @@ import com.b1080265.ProjectFEx.repositories.InvestorRepo;
 import com.b1080265.ProjectFEx.repositories.StartupRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -28,7 +33,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                                 new UsernameNotFoundException("User not found with email: " + username)
                         ));
 
-        return UserPrincipal.create(user);
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+
+        // The following line creates a User (org.springframework.security.core.userdetails.User) instance
+        // with the username, password, and authorities from the user entity.
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
+
 
 }

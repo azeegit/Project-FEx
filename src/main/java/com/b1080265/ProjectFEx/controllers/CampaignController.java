@@ -4,8 +4,10 @@ import com.b1080265.ProjectFEx.entities.Campaign;
 import com.b1080265.ProjectFEx.services.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,7 +19,8 @@ public class CampaignController {
 
     // Endpoint to create a new campaign for a startup
     @PostMapping
-    public ResponseEntity<Campaign> createCampaign(@PathVariable Long startupId, @RequestBody Campaign campaign) {
+//    @PreAuthorize("hasRole('STARTUP')") // Ensures only authorized startups can create campaigns
+    public ResponseEntity<Campaign> createCampaign(@PathVariable Long startupId, @Valid @RequestBody Campaign campaign) {
         Campaign createdCampaign = campaignService.createCampaign(startupId, campaign);
         return ResponseEntity.ok(createdCampaign);
     }
@@ -33,6 +36,9 @@ public class CampaignController {
     @GetMapping("/{campaignId}")
     public ResponseEntity<Campaign> getCampaignDetails(@PathVariable Long startupId, @PathVariable Long campaignId) {
         Campaign campaign = campaignService.getCampaignDetails(startupId, campaignId);
+        if (campaign == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(campaign);
     }
 

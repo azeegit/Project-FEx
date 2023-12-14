@@ -1,5 +1,7 @@
 package com.b1080265.ProjectFEx.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ public class InvestorApplication {
 
     @ManyToOne
     @JoinColumn(name = "investor_id", nullable = false)
+    @JsonBackReference
     private Investor investor;
 
     @ManyToOne

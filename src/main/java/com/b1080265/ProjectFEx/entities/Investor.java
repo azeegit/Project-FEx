@@ -1,10 +1,12 @@
 package com.b1080265.ProjectFEx.entities;
 
 import com.b1080265.ProjectFEx.security.UserDetailsInterface;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "investors", schema = "public")
@@ -18,6 +20,16 @@ public class Investor implements UserDetailsInterface {
     private String password;
     private String organization;
     private String investmentInterests;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     // Constructors
     public Investor() {
@@ -31,6 +43,20 @@ public class Investor implements UserDetailsInterface {
         this.investmentInterests = investmentInterests;
     }
 
+
+    @OneToMany(mappedBy = "investor")
+    @JsonManagedReference
+    private List<InvestorApplication> investorApplications;
+
+    // ... constructors, getters, and setters ...
+
+    public List<InvestorApplication> getCampaigns() {
+        return investorApplications;
+    }
+
+    public void setCampaigns(List<InvestorApplication> investorApplications) {
+        this.investorApplications = investorApplications;
+    }
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

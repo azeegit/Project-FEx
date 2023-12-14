@@ -1,5 +1,6 @@
 package com.b1080265.ProjectFEx.security;
 
+import com.b1080265.ProjectFEx.entities.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +15,8 @@ public interface UserDetailsInterface extends UserDetails {
     String getPassword();
 
     Long getId();
+
+    Role getRole();
 
     @Override
     default Collection<? extends GrantedAuthority> getAuthorities() {
