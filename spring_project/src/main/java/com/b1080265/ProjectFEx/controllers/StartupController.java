@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/startups")
 public class StartupController {
 
@@ -74,7 +75,7 @@ public class StartupController {
         if (startup != null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(startup.getEmail());
             String token = tokenProvider.generateToken(userDetails);
-            return ResponseEntity.ok(new LoginResponse(token));
+            return ResponseEntity.ok(new LoginResponse(token,startup.getId()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

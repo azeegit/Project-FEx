@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/investors")
+@CrossOrigin(origins = "http://localhost:3000")
 public class InvestorController {
 
     @Autowired
@@ -71,7 +72,7 @@ public class InvestorController {
         if (investor != null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(investor.getEmail());
             String token = tokenProvider.generateToken(userDetails);
-            return ResponseEntity.ok(new LoginResponse(token));
+            return ResponseEntity.ok(new LoginResponse(token, investor.getId()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

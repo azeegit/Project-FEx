@@ -38,7 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // The following line creates a User (org.springframework.security.core.userdetails.User) instance
         // with the username, password, and authorities from the user entity.
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),authorities);
     }
 
 

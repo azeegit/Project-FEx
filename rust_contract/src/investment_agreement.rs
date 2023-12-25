@@ -1,4 +1,5 @@
-use super::{Startup, Investor, AgreementStatus};
+// Assuming 'Startup', 'Investor', 'Campaign', and 'AgreementStatus' are defined in the super module or other modules
+use super::{Startup, Investor, Campaign, AgreementStatus};
 use rand::{Rng, thread_rng};
 
 fn generate_unique_id() -> u64 {
@@ -9,36 +10,40 @@ fn generate_unique_id() -> u64 {
 #[derive(Debug, Clone, PartialEq)]
 pub struct InvestmentAgreement {
     pub id: u64,
-    pub startup: Startup,
-    pub investor: Investor,
-    pub amount_invested: f64,
-    pub equity_offered: f64,
+    pub startup: Startup,      // 'Startup' is a type, so it should be PascalCase
+    pub investor: Investor,    // 'Investor' is a type, so it should be PascalCase
+    pub campaign: Campaign,    // 'Campaign' is a type, so it should be PascalCase
     pub terms: String,
-    pub status: AgreementStatus,
+    pub status: AgreementStatus, // 'AgreementStatus' is a type, so it should be PascalCase
 }
 
 impl InvestmentAgreement {
-    pub fn new(startup: Startup, investor: Investor, amount_invested: f64, equity_offered: f64, terms: String) -> Self {
+    pub fn new(startup: Startup, investor: Investor, campaign: Campaign, terms: String) -> Self {
         InvestmentAgreement {
-            id: generate_unique_id(), // This function needs to be defined to generate a unique ID
+            id: generate_unique_id(),
             startup,
             investor,
-            amount_invested,
-            equity_offered,
+            campaign,
             terms,
-            status: AgreementStatus::Pending,
+            status: AgreementStatus::Pending, // Use the enum variant directly
         }
     }
 
     pub fn accept(&mut self) {
-        self.status = AgreementStatus::Accepted;
-        // Additional logic for accepting the agreement (e.g., transferring funds) goes here
+        if self.status == AgreementStatus::Pending {
+            self.status = AgreementStatus::Accepted;
+        }
     }
 
     pub fn reject(&mut self) {
-        self.status = AgreementStatus::Rejected;
-        // Additional logic for rejecting the agreement
+        if self.status == AgreementStatus::Pending {
+            self.status = AgreementStatus::Rejected;
+        }
     }
 
-    // Add other methods as necessary
+    pub fn update_terms(&mut self, new_terms: String) {
+        if self.status == AgreementStatus::Pending {
+            self.terms = new_terms;
+        }
+    }
 }

@@ -6,8 +6,10 @@ import lombok.Data;
 public class LoginResponse {
 
     private String Token;
+    private Long id;
 
-    public LoginResponse(String token) {
+    public LoginResponse(String token, Long ed) {
         Token = token;
+        id=ed;
     }
 }
