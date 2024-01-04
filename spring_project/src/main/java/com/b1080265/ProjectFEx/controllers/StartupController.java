@@ -3,6 +3,8 @@ package com.b1080265.ProjectFEx.controllers;
 import com.b1080265.ProjectFEx.entities.*;
 import com.b1080265.ProjectFEx.security.CustomUserDetailsService;
 import com.b1080265.ProjectFEx.security.JwtTokenProvider;
+import com.b1080265.ProjectFEx.services.BlockchainService;
+import com.b1080265.ProjectFEx.services.BlockchainServiceImpl;
 import com.b1080265.ProjectFEx.services.InvestorService;
 import com.b1080265.ProjectFEx.services.StartupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,13 @@ public class StartupController {
 
         if (!investorService.isCampaignOwnedByStartup(application.getCampaign().getId(), startupId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized to update this application");
+        }
+
+        BlockchainService blockchainService = new BlockchainServiceImpl();
+        boolean success = blockchainService.updateInvestmentAgreementStatus(applicationId, ApplicationStatus.ACCEPTED);
+
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update agreement on blockchain");
         }
 
         InvestorApplication updatedApplication = investorService.updateApplicationStatus(applicationId, ApplicationStatus.ACCEPTED);

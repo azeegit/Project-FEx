@@ -1,11 +1,11 @@
 package com.b1080265.ProjectFEx.controllers;
 
+import com.b1080265.ProjectFEx.entities.*;
 import com.b1080265.ProjectFEx.security.CustomUserDetailsService;
 import com.b1080265.ProjectFEx.security.JwtTokenProvider;
-import com.b1080265.ProjectFEx.entities.Investor;
-import com.b1080265.ProjectFEx.entities.InvestorApplication;
-import com.b1080265.ProjectFEx.entities.LoginRequest;
-import com.b1080265.ProjectFEx.entities.LoginResponse;
+import com.b1080265.ProjectFEx.services.BlockchainService;
+import com.b1080265.ProjectFEx.services.BlockchainServiceImpl;
+import com.b1080265.ProjectFEx.services.CampaignService;
 import com.b1080265.ProjectFEx.services.InvestorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +26,9 @@ public class InvestorController {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private CampaignService campaignService;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -80,14 +83,37 @@ public class InvestorController {
 
     // Endpoint to submit an application for a campaign
     @PostMapping("/{investorId}/campaigns/{campaignId}/apply")
-    public ResponseEntity<InvestorApplication> applyToCampaign(
+    public ResponseEntity<?> applyToCampaign(
             @PathVariable Long investorId,
             @PathVariable Long campaignId,
-            @RequestBody InvestorApplication application
-    ) {
+            @RequestBody InvestorApplication application) {
+
+        // Retrieve the campaign to get the startupId and perhaps terms
+        Campaign campaign = campaignService.getCampaignById(campaignId);
+        if (campaign == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campaign not found");
+        }
+        Long startupId = campaign.getStartup().getId();
+        String terms = campaign.getDescription(); // Assuming terms are part of the campaign description
+
+        // Process the application
         InvestorApplication applied = investorService.applyToCampaign(investorId, campaignId, application);
+        if (applied == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Application process failed");
+        }
+
+        // Create AgreementDetails and interact with the blockchain
+        AgreementDetails details = new AgreementDetails(startupId, investorId, campaignId, terms);
+        BlockchainService blockchainService = new BlockchainServiceImpl();
+        boolean success = blockchainService.createInvestmentAgreement(details);
+
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create agreement on blockchain");
+        }
+
         return ResponseEntity.ok(applied);
     }
+
 
     // Endpoint to retrieve all applications submitted by an investor
     @GetMapping("/{investorId}/applications")

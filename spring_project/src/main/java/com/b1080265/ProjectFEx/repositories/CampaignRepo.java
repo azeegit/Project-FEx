@@ -14,5 +14,7 @@ public interface CampaignRepo extends JpaRepository<Campaign, Long>
 
     Optional<Campaign> findByIdAndStartupId(Long id, Long startupId);
 
+
+
     boolean existsByIdAndStartupId(Long id, Long startupId);
 }

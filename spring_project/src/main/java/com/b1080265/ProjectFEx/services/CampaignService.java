@@ -69,4 +69,9 @@ public class CampaignService {
     public boolean isCampaignOwnedByStartup(Long campaignId, Long startupId) {
         return campaignRepository.existsByIdAndStartupId(campaignId, startupId);
     }
+
+    public Campaign getCampaignById(Long campaignId) {
+        return campaignRepository.getById(campaignId);
+
+    }
 }
