@@ -30,6 +30,9 @@ public class StartupController {
     @Autowired
     private InvestorService investorService;
 
+    @Autowired
+    private BlockchainService blockchainService;
+
     // Endpoint to create a new startup
     @PostMapping
     public ResponseEntity<Startup> createStartup(@RequestBody Startup startup) {
@@ -96,11 +99,16 @@ public class StartupController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized to update this application");
         }
 
-        BlockchainService blockchainService = new BlockchainServiceImpl();
-        boolean success = blockchainService.updateInvestmentAgreementStatus(applicationId, ApplicationStatus.ACCEPTED);
+        Long investorId = application.getInvestor().getId();
+        Long campaignId = application.getCampaign().getId();
+
+
+        // Create agreement details from the application data
+        AgreementDetails details = new AgreementDetails(startupId,investorId,campaignId,"do it");
+        boolean success = blockchainService.createInvestmentAgreement(details);
 
         if (!success) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update agreement on blockchain");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create agreement on blockchain");
         }
 
         InvestorApplication updatedApplication = investorService.updateApplicationStatus(applicationId, ApplicationStatus.ACCEPTED);

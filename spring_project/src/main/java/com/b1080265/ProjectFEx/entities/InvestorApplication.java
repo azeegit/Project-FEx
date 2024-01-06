@@ -1,6 +1,7 @@
 package com.b1080265.ProjectFEx.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -20,6 +21,7 @@ public class InvestorApplication {
     private Investor investor;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
 
@@ -54,7 +56,6 @@ public class InvestorApplication {
             int investorRequest,
             int investorGivingAmount,
             String investorDetailsToContact,
-            String status,
             String businessPlan,
             String pitchVideo,
             String additionalComments
@@ -64,7 +65,6 @@ public class InvestorApplication {
         this.investorRequest = investorRequest;
         this.investorGivingAmount = investorGivingAmount;
         this.investorDetailsToContact = investorDetailsToContact;
-//        this.status = status;
         this.businessPlan = businessPlan;
         this.pitchVideo = pitchVideo;
         this.additionalComments = additionalComments;
