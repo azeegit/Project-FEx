@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,18 +104,43 @@ public class StartupController {
         Long investorId = application.getInvestor().getId();
         Long campaignId = application.getCampaign().getId();
 
+        // Construct command to run Node.js script
+        String scriptPath = "src/main/resources/scripts/nearInteraction.js";
+        String command = "node " + scriptPath + " createInvestmentAgreement " + startupId + " " + investorId + " " + campaignId + " 'do it'";
 
-        // Create agreement details from the application data
-        AgreementDetails details = new AgreementDetails(startupId,investorId,campaignId,"do it");
-        boolean success = blockchainService.createInvestmentAgreement(details);
 
-        if (!success) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create agreement on blockchain");
+
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            // Read the output from the command
+            System.out.println("Standard output:");
+            String s;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            // Read any errors from the attempted command
+            System.out.println("Standard error:");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+
+            int exitVal = process.waitFor();
+            System.out.println("Process exit value: " + exitVal);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to create agreement on blockchain");
         }
+
 
         InvestorApplication updatedApplication = investorService.updateApplicationStatus(applicationId, ApplicationStatus.ACCEPTED);
         return ResponseEntity.ok(updatedApplication);
     }
+
 
     @PutMapping("/{startupId}/applications/{applicationId}/reject")
     public ResponseEntity<?> rejectApplication(
