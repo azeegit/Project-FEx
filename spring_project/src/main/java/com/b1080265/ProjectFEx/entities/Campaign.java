@@ -23,7 +23,7 @@ public class Campaign {
     @OneToMany(mappedBy = "campaign")
     private List<InvestorApplication> investorApplications;
 
-    // ... existing constructors, getters, and setters ...
+
 
     public List<InvestorApplication> getInvestorApplications() {
         return investorApplications;
@@ -33,7 +33,7 @@ public class Campaign {
         this.investorApplications = investorApplications;
     }
 
-    // Other campaign details
+
 
     @ManyToOne
     @JoinColumn(name = "startup_id", nullable = false)

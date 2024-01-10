@@ -142,7 +142,7 @@ public class InvestorService {
 
 
 
-    // Existing methods...
+
 
     public List<InvestorApplication> getApplicationsForCampaign(Long campaignId) {
         return investorApplicationRepository.findByCampaignId(campaignId);

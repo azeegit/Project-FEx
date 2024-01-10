@@ -61,7 +61,7 @@ public class CampaignController {
         return ResponseEntity.status(status).body(message);
     }
 
-    // ... existing methods ...
+
 
     @GetMapping("/{campaignId}/applications")
     public ResponseEntity<?> getCampaignApplications(@PathVariable Long startupId, @PathVariable Long campaignId) {
@@ -77,7 +77,7 @@ public class CampaignController {
         List<Campaign> campaigns = campaignService.getAllCampaigns();
         return ResponseEntity.ok(campaigns);
     }
-    // Other endpoints for managing campaigns can be added here
+
 
     @DeleteMapping("/{campaignId}")
     public ResponseEntity<?> deleteCampaign(@PathVariable Long startupId, @PathVariable Long campaignId) {

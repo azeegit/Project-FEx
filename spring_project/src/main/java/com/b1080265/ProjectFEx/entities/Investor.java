@@ -48,7 +48,7 @@ public class Investor implements UserDetailsInterface {
     @JsonManagedReference
     private List<InvestorApplication> investorApplications;
 
-    // ... constructors, getters, and setters ...
+
 
     public List<InvestorApplication> getCampaigns() {
         return investorApplications;
@@ -71,7 +71,7 @@ public class Investor implements UserDetailsInterface {
     public String getInvestmentInterests() { return investmentInterests; }
     public void setInvestmentInterests(String investmentInterests) { this.investmentInterests = investmentInterests; }
 
-    // UserDetailsInterface methods
+
     @Override
     public String getUsername() { return getEmail(); }
     @Override
@@ -87,5 +87,5 @@ public class Investor implements UserDetailsInterface {
 
 
 
-    // Other methods
+
 }

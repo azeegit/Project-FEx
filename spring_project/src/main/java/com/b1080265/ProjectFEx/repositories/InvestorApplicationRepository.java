@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface InvestorApplicationRepository extends JpaRepository<InvestorApplication, Long> {
-    // You can define custom methods here if needed, e.g.:
+
      List<InvestorApplication> findByCampaignId(Long campaignId);
 }

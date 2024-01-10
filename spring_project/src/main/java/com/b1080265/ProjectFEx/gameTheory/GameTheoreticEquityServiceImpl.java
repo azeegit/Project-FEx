@@ -68,12 +68,9 @@ public class GameTheoreticEquityServiceImpl implements GameTheoriticEquityServic
     }
 
     private double simulateStrategy(Player player, Strategy strategy, Game game) {
-        // Simulate the strategy and calculate expected payoff
-        // This method would need to understand the interactions among players' strategies
-        // and how these interactions influence the payoff of the given player.
-        // Placeholder logic for simulation
+
         double simulatedPayoff = 0.0;
-        // ... simulation logic ...
+
         return simulatedPayoff;
     }
 }

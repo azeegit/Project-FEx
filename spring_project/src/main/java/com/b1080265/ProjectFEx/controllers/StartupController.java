@@ -74,7 +74,7 @@ public class StartupController {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    // Other endpoints...
+
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {

@@ -6,7 +6,7 @@ public class AgreementDetails {
     private Long campaignId;
     private String terms;
 
-    // Constructor, getters, and setters...
+
 
 
     public AgreementDetails(Long startupId, Long investorId, Long campaignId, String terms) {

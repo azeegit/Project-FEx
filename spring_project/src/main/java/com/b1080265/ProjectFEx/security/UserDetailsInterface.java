@@ -20,7 +20,7 @@ public interface UserDetailsInterface extends UserDetails {
 
     @Override
     default Collection<? extends GrantedAuthority> getAuthorities() {
-        // Implement logic for authorities if necessary
+
         return null;
     }
 

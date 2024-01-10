@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface StartupRepo extends JpaRepository<Startup, Long> {
-    // You can add custom query methods if needed
+
     @Query("SELECT i FROM Startup i WHERE i.email = :email")
     Startup findByUsername(@Param("email") String email);
 

@@ -20,7 +20,7 @@ public class StartupProfile {
     private String industry;
     private String location;
     private String websiteUrl;
-    // Add other relevant fields
+
 
     // Constructors
     public StartupProfile() {
@@ -85,6 +85,6 @@ public class StartupProfile {
         this.websiteUrl = websiteUrl;
     }
 
-    // Other getters and setters
+
 }
 

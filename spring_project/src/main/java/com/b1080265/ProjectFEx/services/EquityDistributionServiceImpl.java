@@ -42,22 +42,14 @@ public class EquityDistributionServiceImpl implements EquityDistributionService 
     }
 
     private double calculateTotalEquityValue(Player player, double equityPercent) {
-        // Placeholder logic to calculate the total value of equity
-        // Could involve accessing campaign details, investment amounts, etc.
-        // This is a simplified example:
+
         double startupValuation = player.getStartup().getValuation(); // Hypothetical method in Player class
         return startupValuation * equityPercent / 100;
     }
 
     @Override
     public PayOff calculatePayoff(Player player, Strategy strategy) {
-        // The method implementation will depend on how Payoff, Player, and Strategy are defined
-        // Example logic (assuming equity distribution based on investment):
-        // 1. Calculate the total equity the player would receive based on the strategy
-        // 2. Determine the value of that equity (could be based on the startup's valuation)
-        // 3. Create and return a new Payoff object with the calculated value
 
-        // Placeholder for calculation logic:
         double equityPercent = strategy.getEquityPercent(); // Hypothetical method in Strategy class
         double totalEquityValue = calculateTotalEquityValue(player, equityPercent);
 

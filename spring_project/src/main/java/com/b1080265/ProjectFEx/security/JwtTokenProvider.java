@@ -43,9 +43,9 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
-            // Log and handle the exception
+
         }
-        // Handle other exceptions
+
         return false;
     }
 

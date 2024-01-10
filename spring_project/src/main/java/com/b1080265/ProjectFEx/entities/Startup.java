@@ -96,5 +96,5 @@ public class Startup implements UserDetailsInterface {
     @Override
     public boolean isEnabled() { return true; }
 
-    // Other methods
+
 }

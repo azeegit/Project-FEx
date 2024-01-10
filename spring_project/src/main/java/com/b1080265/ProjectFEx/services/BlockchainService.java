@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 public interface BlockchainService {
     boolean createInvestmentAgreement(AgreementDetails details);
     boolean updateInvestmentAgreementStatus(Long agreementId, ApplicationStatus status);
-    // Other blockchain-related methods...
+
 }

@@ -27,11 +27,11 @@ public class StartupProfileService {
         currentProfile.setDescription(updatedProfile.getDescription());
         currentProfile.setIndustry(updatedProfile.getIndustry());
         currentProfile.setLocation(updatedProfile.getLocation());
-        // Add other fields that can be updated
+
 
         return startupProfileRepository.save(currentProfile);
     }
 
-    // Additional methods as needed
+
 }
 
