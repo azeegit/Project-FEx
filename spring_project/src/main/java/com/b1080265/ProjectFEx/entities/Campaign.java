@@ -4,6 +4,7 @@ package com.b1080265.ProjectFEx.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "campaigns", schema = "public")
@@ -18,6 +19,19 @@ public class Campaign {
     private int equityOffered;
     private int valuation;
     private String description;
+
+    @OneToMany(mappedBy = "campaign")
+    private List<InvestorApplication> investorApplications;
+
+    // ... existing constructors, getters, and setters ...
+
+    public List<InvestorApplication> getInvestorApplications() {
+        return investorApplications;
+    }
+
+    public void setInvestorApplications(List<InvestorApplication> investorApplications) {
+        this.investorApplications = investorApplications;
+    }
 
     // Other campaign details
 

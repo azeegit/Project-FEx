@@ -33,6 +33,17 @@ public class InvestorApplication {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    private int equityReceived;
+
+    // Getters and setters...
+
+    public int getEquityReceived() {
+        return equityReceived;
+    }
+
+    public void setEquityReceived(int equityReceived) {
+        this.equityReceived = equityReceived;
+    }
     public ApplicationStatus getStatus() {
         return status;
     }
@@ -40,6 +51,8 @@ public class InvestorApplication {
     public void setStatus(ApplicationStatus status) {
         this.status = status;
     }
+
+
 
     private String businessPlan; // Path or link to the business plan
     private String pitchVideo;   // Path or link to the pitch video

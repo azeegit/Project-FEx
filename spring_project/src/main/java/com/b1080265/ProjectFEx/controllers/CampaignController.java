@@ -71,5 +71,22 @@ public class CampaignController {
         List<InvestorApplication> applications = investorService.getApplicationsForCampaign(campaignId);
         return ResponseEntity.ok(applications);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Campaign>> getAllCampaigns() {
+        List<Campaign> campaigns = campaignService.getAllCampaigns();
+        return ResponseEntity.ok(campaigns);
+    }
     // Other endpoints for managing campaigns can be added here
+
+    @DeleteMapping("/{campaignId}")
+    public ResponseEntity<?> deleteCampaign(@PathVariable Long startupId, @PathVariable Long campaignId) {
+        boolean isDeleted = campaignService.deleteCampaign(startupId, campaignId);
+
+        if (isDeleted) {
+            return ResponseEntity.ok().build(); // Successfully deleted the campaign
+        } else {
+            return ResponseEntity.notFound().build(); // Campaign not found or couldn't be deleted
+        }
+    }
 }

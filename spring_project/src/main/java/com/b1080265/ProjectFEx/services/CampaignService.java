@@ -1,5 +1,6 @@
 package com.b1080265.ProjectFEx.services;
 
+import com.b1080265.ProjectFEx.entities.InvestorApplication;
 import com.b1080265.ProjectFEx.security.NotFoundException;
 import com.b1080265.ProjectFEx.repositories.CampaignRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.b1080265.ProjectFEx.repositories.StartupRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 // CampaignService.java
 
@@ -50,6 +52,20 @@ public class CampaignService {
         return campaignRepository.findByStartupId(startupId);
     }
 
+    public void processInvestorApplications(Long campaignId) {
+        Campaign campaign = getCampaignById(campaignId);
+        if (campaign == null) {
+            throw new NotFoundException("Campaign not found");
+        }
+
+        for (InvestorApplication application : campaign.getInvestorApplications()) {
+            // Process each application
+            // For example, you can log or modify something
+            logger.info("Processing application from investor {}", application.getInvestor().getName());
+            // Add your business logic here
+        }
+    }
+
     // Service method to retrieve details of a specific campaign
     public Campaign getCampaignDetails(Long startupId, Long campaignId) {
         return campaignRepository.findByIdAndStartupId(campaignId, startupId)
@@ -70,8 +86,27 @@ public class CampaignService {
         return campaignRepository.existsByIdAndStartupId(campaignId, startupId);
     }
 
+    // In CampaignService class
+    public List<Campaign> getAllCampaigns() {
+        return campaignRepository.findAll(); // Assuming you have a JPA repository
+    }
+
     public Campaign getCampaignById(Long campaignId) {
         return campaignRepository.getById(campaignId);
 
+    }
+
+    public boolean deleteCampaign(Long startupId, Long campaignId) {
+        // Check if the campaign exists and belongs to the startup
+        Optional<Campaign> campaignOptional = campaignRepository.findByIdAndStartupId(campaignId, startupId);
+
+        if (campaignOptional.isPresent()) {
+            // Perform the deletion
+            campaignRepository.deleteById(campaignId);
+            return true; // Return true if the campaign was successfully deleted
+        } else {
+            // Campaign not found or doesn't belong to the startup
+            return false; // Return false otherwise
+        }
     }
 }

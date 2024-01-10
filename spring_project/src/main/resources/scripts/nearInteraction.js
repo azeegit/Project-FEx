@@ -97,9 +97,9 @@ async function main() {
 
     if (operation === "createInvestmentAgreement") {
         // Extract arguments for createInvestmentAgreement
-        const startupId = args[1];
-        const investorId = args[2];
-        const campaignId = args[3];
+        const startupId = Number(args[1]);
+        const investorId = Number(args[2]);
+        const campaignId = Number(args[3]);
         const terms = args[4];
 
         const agreementDetails = {
@@ -112,7 +112,7 @@ async function main() {
         await createInvestmentAgreement(contractId, privateKey, agreementDetails);
     } else if (operation === "updateInvestmentAgreementStatus") {
         // Extract arguments for updateInvestmentAgreementStatus
-        const agreementId = args[1];
+        const agreementId = Number(args[1]);
         const newStatus = args[2];
 
         await updateInvestmentAgreementStatus(contractId, privateKey, agreementId, newStatus);

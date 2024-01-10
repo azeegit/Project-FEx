@@ -121,4 +121,10 @@ public class InvestorController {
         InvestorApplication application = investorService.getInvestorApplicationDetails(investorId, applicationId);
         return ResponseEntity.ok(application);
     }
+
+    @GetMapping("campaigns/all")
+    public ResponseEntity<List<Campaign>> getAllCampaigns() {
+        List<Campaign> campaigns = campaignService.getAllCampaigns();
+        return ResponseEntity.ok(campaigns);
+    }
 }
